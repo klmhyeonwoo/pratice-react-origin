@@ -13,49 +13,50 @@
       // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
       const rootElement = document.getElementById("root");
 
-      // state 값을 넣어줄 객체를 전역 객체로 선언해준다.
-      const state = { keyword: "", typing: false, result: "" };
-
       // 리액트 구조와 비슷하죠?
-      // 여기서 typing을 true의 값으로 변경해요
       const App = () => {
-        function handleChange(event) {
-          setState({ typing: true, keyword: event.target.value });
-        }
+        // 리액트에서 제공해주는 useState를 사용해주면 자동으로 렌더링을 해줘요
+        const [keyword, setKeyword] = React.useState(() => {
+          return window.localStorage.getItem("keyword");
+        });
+        const [typing, setTyping] = React.useState(false);
+        const [result, setResult] = React.useState("");
 
+        // useState는 아래로 풀어서 구조를 볼 수 있다.
+        // const keywordState = React.useState("");
+        // const keyword = keywordState[0];
+        // const setKeyword = keywordState[1];
+
+        // 아래 콘솔 디버깅이 렌더링 될 떄마다 실행 -> 비효율
+        // console.log("Test");
+
+        React.useEffect(() => {
+          // useEffect에 빈배열로 넣어주면 렌더링 후 한번만 실행이 된다.
+          // 빈배열 안에 변수를 넣으면 변수가 렌더링 될 떄마다 실행이 된다.
+          console.log("Test");
+          window.localStorage.setItem("keyword", keyword);
+        }, [keyword, typing]);
+
+        function handleChange(event) {
+          setKeyword(event.target.value);
+          setTyping(true);
+        }
         // 버튼을 클릭했을 때의 이벤트를 구현해요,
         // 여기서 typing을 false의 값으로 변경해요
         function handleClick() {
-          setState({
-            typing: false,
-            result: `we find results of keyword ${state.keyword}`
-          });
+          setTyping(false);
+          setResult(`we find results of ${keyword}`);
         }
 
         return (
           <>
-            <input onChange={handleChange} />
+            <input onChange={handleChange} placeholder={keyword} />
             <button onClick={handleClick}>search</button>
-            <p>
-              {state.typing
-                ? `Looking for ${state.keyword}..`
-                : `${state.result}`}
-            </p>
+            <p>{typing ? `Looking for ..${keyword}` : result}</p>
           </>
         );
       };
 
-      function setState(newState) {
-        // 기존의 (state) 객체에 (newState) 객체를 넣어주는데, 변경된 얘들만 넣어주는 메소드
-        Object.assign(state, newState);
-        // render 함수를 실행해줘요
-        render();
-      }
-
-      // 현재 불변 객체이기 떄문에, render 값을 재호출 해주지 않으면 화면이 렌더링 되지 않는다.
-      function render() {
-        ReactDOM.render(<App />, rootElement);
-      }
       // 처음 한번은 해줘야함
       ReactDOM.render(<App />, rootElement);
     </script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+
+      // 리액트 구조와 비슷하죠?
+      const App = () => {
+        // 리액트에서 제공해주는 useState를 사용해주면 자동으로 렌더링을 해줘요
+        const [keyword, setKeyword] = React.useState("");
+        const [typing, setTyping] = React.useState(false);
+        const [result, setResult] = React.useState("");
+
+        // useState는 아래로 풀어서 구조를 볼 수 있다.
+        // const keywordState = React.useState("");
+        // const keyword = keywordState[0];
+        // const setKeyword = keywordState[1];
+
+        function handleChange(event) {
+          setKeyword(event.target.value);
+          setTyping(true);
+        }
+        // 버튼을 클릭했을 때의 이벤트를 구현해요,
+        // 여기서 typing을 false의 값으로 변경해요
+        function handleClick() {
+          setTyping(false);
+          setResult(`we find results of ${keyword}`);
+        }
+
+        return (
+          <>
+            <input onChange={handleChange} />
+            <button onClick={handleClick}>search</button>
+            <p>{typing ? `Looking for ..${keyword}` : result}</p>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

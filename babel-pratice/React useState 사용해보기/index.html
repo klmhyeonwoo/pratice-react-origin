@@ -16,7 +16,9 @@
       // 리액트 구조와 비슷하죠?
       const App = () => {
         // 리액트에서 제공해주는 useState를 사용해주면 자동으로 렌더링을 해줘요
-        const [keyword, setKeyword] = React.useState("");
+        const [keyword, setKeyword] = React.useState(() => {
+          return window.localStorage.getItem("keyword");
+        });
         const [typing, setTyping] = React.useState(false);
         const [result, setResult] = React.useState("");
 
@@ -24,6 +26,16 @@
         // const keywordState = React.useState("");
         // const keyword = keywordState[0];
         // const setKeyword = keywordState[1];
+
+        // 아래 콘솔 디버깅이 렌더링 될 떄마다 실행 -> 비효율
+        // console.log("Test");
+
+        React.useEffect(() => {
+          // useEffect에 빈배열로 넣어주면 렌더링 후 한번만 실행이 된다.
+          // 빈배열 안에 변수를 넣으면 변수가 렌더링 될 떄마다 실행이 된다.
+          console.log("Test");
+          window.localStorage.setItem("keyword", keyword);
+        }, [keyword, typing]);
 
         function handleChange(event) {
           setKeyword(event.target.value);
@@ -38,7 +50,7 @@
 
         return (
           <>
-            <input onChange={handleChange} />
+            <input onChange={handleChange} placeholder={keyword} />
             <button onClick={handleClick}>search</button>
             <p>{typing ? `Looking for ..${keyword}` : result}</p>
           </>

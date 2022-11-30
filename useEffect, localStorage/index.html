@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+
+      // state 값을 넣어줄 객체를 전역 객체로 선언해준다.
+      const state = { keyword: "", typing: false, result: "" };
+
+      // 리액트 구조와 비슷하죠?
+      // 여기서 typing을 true의 값으로 변경해요
+      const App = () => {
+        function handleChange(event) {
+          setState({ typing: true, keyword: event.target.value });
+        }
+
+        // 버튼을 클릭했을 때의 이벤트를 구현해요,
+        // 여기서 typing을 false의 값으로 변경해요
+        function handleClick() {
+          setState({
+            typing: false,
+            result: `we find results of keyword ${state.keyword}`
+          });
+        }
+
+        return (
+          <>
+            <input onChange={handleChange} />
+            <button onClick={handleClick}>search</button>
+            <p>
+              {state.typing
+                ? `Looking for ${state.keyword}..`
+                : `${state.result}`}
+            </p>
+          </>
+        );
+      };
+
+      function setState(newState) {
+        // 기존의 (state) 객체에 (newState) 객체를 넣어주는데, 변경된 얘들만 넣어주는 메소드
+        Object.assign(state, newState);
+        // render 함수를 실행해줘요
+        render();
+      }
+
+      // 현재 불변 객체이기 떄문에, render 값을 재호출 해주지 않으면 화면이 렌더링 되지 않는다.
+      function render() {
+        ReactDOM.render(<App />, rootElement);
+      }
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

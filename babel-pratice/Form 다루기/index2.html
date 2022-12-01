@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+
+      const App = () => {
+        const [message, setMessage] = React.useState("");
+        const [phoneNumber, setPhoneNumber] = React.useState("");
+
+        const handleSubmit = (event) => {
+          event.preventDefault();
+
+          alert(phoneNumber);
+        };
+
+        const handleChange = (event) => {
+          // 여기서 바로 state인 phoneNumber 로 조건문을 주게 되면, useState의 미세한 텀에 의해 바뀌지 않게 된다.
+          // event로 관리될 수 있는 친구라면 event.target.value 값을 통해 관리를 해주자
+          // startsWith 함수는 ~로 시작하는지 확인하는 함수
+          if (event.target.value.startsWith(0)) {
+            setMessage("correct number");
+            setPhoneNumber(event.target.value);
+          // 공백일 경우에 모든 값을 초기화 시켜준다.
+          } else if (event.target.value.length === 0) {
+            setPhoneNumber("");
+            setMessage("");
+          // 숫자는 있는데, 0으로 시작하지 않는 경우 다음과 같은 결과로 이어준다.
+          } else {
+            setPhoneNumber("");
+            setMessage("not correct number");
+          }
+        };
+        return (
+          <>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="phone">Phone Number : </label>
+              <input
+                id="phone"
+                name="phone"
+                onChange={handleChange}
+                value={phoneNumber}
+              />
+              <p> {message} </p>
+              <br />
+              <br />
+              <button
+                type="submit"
+                disabled={
+                  phoneNumber.length > 0 && message === "correct number"
+                    ? false
+                    : true
+                }
+              >
+                Submit
+              </button>
+              <p>{phoneNumber}</p>
+            </form>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        // console.dir을 하면 해당 태그의 구조를 보여준다.
+        console.log(event.target);
+        alert(
+          // id의 value 값에 접근을 한다.
+          `FirstName : ${event.target.elements.fname.value} LastName : ${event.target.elements.cars.value}`
+        );
+      };
+
+      const App = () => {
+        return (
+          <>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="fname">First name:</label>
+              <br />
+              <input type="text" id="fname" name="fname" defaultValue="John" />
+              <br />
+              <select name="cars" id="cars">
+                <option defaultValue="volvo">Volvo</option>
+                <option defaultValue="saab">Saab</option>
+                <option defaultValue="mercedes">Mercedes</option>
+                <option defaultValue="audi">Audi</option>
+              </select>
+              <br />
+              <br />
+              <input type="submit" value="Submit" />
+            </form>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

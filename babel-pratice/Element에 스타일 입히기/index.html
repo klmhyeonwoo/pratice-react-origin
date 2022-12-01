@@ -10,59 +10,18 @@
     <div id="root"></div>
     <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
 
-    <style>
-      .button {
-        background-color: #4caf50; /* Green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-      }
-
-      .blue {
-        background-color: #008cba;
-      } /* Blue */
-      .red {
-        background-color: #f44336;
-      } /* Red */
-      .gray {
-        background-color: #e7e7e7;
-        color: black;
-      } /* Gray */
-      .black {
-        background-color: #555555;
-      } /* Black */
-    </style>
     <script type="text/babel">
       // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
       const rootElement = document.getElementById("root");
-
-      function Button({ className = "", style, ...props }) {
-        return (
-          <button
-            className={`button ${className}`}
-            style={{ fontSize: 50, ...style }}
-            {...props}
-          />
-        );
-      }
-
       const App = () => {
+        const inputRef = React.useRef(null);
+        React.useEffect(() => {
+          // document.getElementById("input").focus();
+          inputRef.current.focus();
+        }, []);
         return (
           <>
-            <Button style={{ borderRadius: "50%" }}>Green</Button>
-            {/* 위의 Button 컴포넌트에서 style을 먼저 실행하고(props가 우선순위), style을 오버라이드 시켜줌으로써 30이 적용 */}
-            <Button className="blue" style={{ fontSize: 30 }}>
-              Blue
-            </Button>
-            <Button className="red">Red</Button>
-            <Button className="gray">Gray</Button>
-            <Button className="black">Black</Button>
+            <input ref={inputRef} />
           </>
         );
       };

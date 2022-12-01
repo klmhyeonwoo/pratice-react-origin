@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+
+      // ErrorBoundary 컴포넌트는 class 컴포넌트로 해야한다.
+      class ErrorBoundary extends React.Component {
+        // 초기 state  객체에 error 값을 null로 지정해준다.
+        state = { error: null };
+        // error가 발생할 경우 error을 받아준다.
+        // error가 났을 때 상태 값을 처리하는 함수 자체를 class 컴포넌트에서만 제공을 한다.
+        static getDerivedStateFromError(error) {
+          return { error };
+        }
+
+        // 기본적으로 클래스 컴포넌트는 render 함수를 가지고 있다.
+        render() {
+          const { error } = this.state;
+          if (error) {
+            return <this.props.fallback error={error} />;
+          }
+
+          // 자식 요소를 그려달라!
+          // return this.props.children;
+          // fallback 요소를 그려달라!
+          // return this.props.fallback;
+          return this.props.children;
+        }
+      }
+
+      const Child = () => {
+        throw new Error("Something wrong...");
+        return <p> Child... </p>;
+      };
+
+      const Fallback = ({ error }) => {
+        alert(error.message);
+        return <p>THERE IS SOME ERROR</p>;
+      };
+
+      const App = () => {
+        return (
+          <>
+            <p>APP</p>
+            {/* fallback 자리에 태그를 넣어줄 수도 있고, 컴포넌트를 넣어줄 수도 있음 */}
+            <ErrorBoundary fallback={Fallback}>
+              <Child />
+            </ErrorBoundary>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

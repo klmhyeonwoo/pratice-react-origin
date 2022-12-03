@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+      const App = () => {
+        const [data, setData] = React.useState(null);
+        const [error, setError] = React.useState(null);
+
+        React.useEffect(() => {
+          // fetch 메소드를 사용해줄 때는 에러를 항상 고려해야한다.
+          fetch(
+            "https://raw.githubusercontent.com/techoi/raw-data-api/main/simple-api.json"
+          )
+            .then((res) => res.json())
+            .then((item) => {
+              // item만 출력을 하면 object 파일로 출력이 되는데,
+              console.log(item);
+              // JSON.stringify를 사용하면 JSON 자체를 텍스트로 변환해서 출력을 해버린다.
+              console.log(JSON.stringify(item));
+              setData(item.data);
+            })
+            .catch((error) => {
+              setError(error.message);
+              //alert(error);
+            });
+        }, []);
+
+        if (error != null) {
+          return <p>{error}</p>;
+        }
+
+        if (data == null) {
+          return <p> Loading ... </p>;
+        }
+
+        return (
+          <div>
+            <p>People</p>
+            <p>{JSON.stringify(data, null, 2)}</p>
+            {data.people.map((person) => {
+              return (
+                <>
+                  <span> name : {person.name} </span>
+                  <span>, age : {person.age} </span> <br />
+                </>
+              );
+            })}
+          </div>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

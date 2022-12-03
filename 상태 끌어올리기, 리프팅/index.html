@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+
+      const ID = ({ id, handleIdChange }) => {
+        return (
+          <>
+            <label>ID:</label>
+            <input onChange={handleIdChange} value={id} />
+          </>
+        );
+      };
+
+      const PW = ({ pw, handlePwChange }) => {
+        return (
+          <>
+            <label>PW:</label>
+            <input onChange={handlePwChange} value={pw} type="password" />
+          </>
+        );
+      };
+
+      const App = () => {
+        const [id, setId] = React.useState("");
+        const [pw, setPw] = React.useState("");
+
+        const handleLoginClick = (event) => {
+          event.preventDefault();
+          alert(`id : ${id}, pw : ${pw}`);
+        };
+
+        const handleIdChange = (event) => {
+          setId(event.target.value);
+          console.log(`ID : ${id}`);
+        };
+
+        const handlePwChange = (event) => {
+          setPw(event.target.value);
+          console.log(`PW : ${pw}`);
+        };
+
+        return (
+          <>
+            <form onSubmit={handleLoginClick}>
+              {/* 자식 컴포넌트에서 부모 컴포넌트로 상태 올리기 => 상태 리프팅 */}
+              <ID id={id} handleIdChange={handleIdChange} />
+              <br />
+              <PW id={id} handlePwChange={handlePwChange} />
+              <button
+                type="submit"
+                disabled={id.length === 0 || pw.length === 0}
+              >
+                {" "}
+                Login{" "}
+              </button>
+            </form>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Its test!</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <!-- babel이 있어야 JSX 문법을 읽을 수 있음 -->
+
+    <script type="text/babel">
+      // 최상위 root를 지정해줌으로써, root DOM에 접근을 한다.
+      const rootElement = document.getElementById("root");
+      const todos = [
+        { id: 1, value: "Wash Dishes" },
+        { id: 2, value: "Take a Shower" }
+      ];
+      const App = () => {
+        const [items, setItems] = React.useState(todos);
+
+        const handleDoneClick = (element) => {
+          // 매개변수로 해당 요소를 받아 state를 filter 값을 통해 일치하지 않는 것만 필터링 한다.
+          // setItem((기존 state) => 기존 state.filter((data) => data !== element))
+          // 새롭게 정의
+          setItems((items) => items.filter((item) => item !== element));
+        };
+
+        const handleRestoreClick = () => {
+          // items 배열에서 todos의 요소를 포함하지 않는 녀석을 items state에 저장시켜준다.
+          // setItem((기존 state) => [...스프레드 연산자를 이용한 기존 state, 새로 다시 넣어줄 값])
+          // 추가 및 수정할 때 사용하는 spread 연산자
+          setItems((items) => [
+            ...items,
+            todos.find((item) => !items.includes(item))
+          ]);
+        };
+
+        return (
+          <>
+            <p>To Do List</p>
+            {items.map((item) => {
+              return (
+                <div key={item.id}>
+                  <span>{item.value}</span>
+                  {/* 삭제 버튼을 구성할 때는 () => 함수와 같이 구성해줘야한다.*/}
+                  <button onClick={() => handleDoneClick(item)}>
+                    Delete {item.id}'s btn
+                  </button>
+                </div>
+              );
+            })}
+            <button onClick={handleRestoreClick}>Restore</button>
+          </>
+        );
+      };
+
+      // 처음 한번은 해줘야함
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>
